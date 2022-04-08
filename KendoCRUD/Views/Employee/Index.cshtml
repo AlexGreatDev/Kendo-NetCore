@@ -1,0 +1,44 @@
+﻿
+@using KendoCRUD.Models.Employee;
+
+@using Kendo.Mvc.UI;
+<div class="row">
+    <div class="col-12">
+        @(Html.Kendo().Grid<EmployeeViewModel>().Name("Grid")
+                  .Columns(columns =>
+                  {
+
+                      columns.Bound(p => p.EmployeeFirstName);
+                      columns.Bound(p => p.EmployeeLastName);
+                      columns.Bound(p => p.EmployeePhone);
+                      columns.Bound(p => p.EmployeeZip);
+                      columns.Bound(p => p.HireDate);
+                      columns.Bound(p => p.Date);
+                      columns.Command(command =>
+                      {
+
+                          command.Edit().Text(" ").UpdateText("save").CancelText("cancell");
+                          command.Destroy().Text(" ");
+
+                      }).Width("15%").Title("Actions").HtmlAttributes(new { @class = "text-center" }).HeaderHtmlAttributes(new { @class = "text-center" });
+                  })
+
+                  .ToolBar(toolbar => toolbar.Create().Text("Add Employee"))
+                  .Editable(editable => editable
+                  .DisplayDeleteConfirmation("Are you Sure?")
+                  .Mode(GridEditMode.PopUp).Window(win => win.Animation(p => p.Close(c => c.Zoom(ZoomDirection.Out).Fade(FadeDirection.Out).Duration(300))).Title("save")))
+                  .Sortable()
+                  .DataSource(dataSource => dataSource
+                  .Ajax().PageSize(10).Model(m => { m.Id(p => p.EmployeeID); })
+                  .Read(read => read.Action("Employee_Read", "Employee"))
+                  .Create(create => create.Action("Employee_Create", "Employee"))
+                  .Destroy(destroy => destroy.Action("Employee_Destroy", "Employee"))
+                  .Update(update => update.Action("Employee_Update", "Employee")))
+                  .Pageable(pager => pager.PageSizes(new int[] { 10, 20, 30, 40, 50, 100 }).Refresh(true)
+                                    )
+                  
+             )
+    </div>
+</div>
+
+
